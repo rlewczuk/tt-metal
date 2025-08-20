@@ -42,6 +42,11 @@ static const char* TT_METAL_CORE_GRID_OVERRIDE_TODEPRECATE_ENV_VAR = "TT_METAL_C
 
 RunTimeOptions::RunTimeOptions() {
     const char* root_dir_str = std::getenv(TT_METAL_HOME_ENV_VAR);
+#ifdef TT_METAL_HOME_DEFAULT
+    if (root_dir_str == nullptr) {
+        root_dir_str = TT_METAL_HOME_DEFAULT;
+    }
+#endif
     if (root_dir_str != nullptr) {
         this->is_root_dir_env_var_set = true;
         this->root_dir = std::string(root_dir_str) + "/";

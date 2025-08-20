@@ -397,6 +397,10 @@ else
     cmake_args+=("-DENABLE_FAKE_KERNELS_TARGET=OFF")
 fi
 
+if [ "$build_packages" == "ON" ]; then
+    cmake_args+=("-DTT_METAL_HOME_DEFAULT=\"/usr/libexec/tt-metalium\"")
+fi
+
 # toolchain and cxx_compiler settings would conflict with eachother
 # only use toolchain if not setting cxx compiler directly
 if [ "$cxx_compiler_path" == "" ]; then

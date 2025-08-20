@@ -44,7 +44,11 @@ inline std::string get_core_descriptor_file(
     if (getenv("TT_METAL_HOME")) {
         core_desc_dir = getenv("TT_METAL_HOME");
     } else {
+#ifdef TT_METAL_HOME_DEFAULT
+        core_desc_dir = TT_METAL_HOME_DEFAULT;
+#else
         core_desc_dir = "./";
+#endif
     }
     if (core_desc_dir.back() != '/') {
         core_desc_dir += "/";

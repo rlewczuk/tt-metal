@@ -17,6 +17,11 @@ add_library(Metalium::Metal::LLRT ALIAS llrt)
 
 add_subdirectory(hal/tt-1xx)
 
+if(DEFINED TT_METAL_HOME_DEFAULT)
+    message("Setting default value of TT_METAL_HOME to ${TT_METAL_HOME_DEFAULT}")
+    add_compile_definitions("TT_METAL_HOME_DEFAULT=${TT_METAL_HOME_DEFAULT}")
+endif()
+
 target_link_libraries(
     llrt
     PUBLIC

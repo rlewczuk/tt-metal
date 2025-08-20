@@ -62,7 +62,11 @@ inline std::string get_soc_description_file(
     if (auto* home = getenv("TT_METAL_HOME")) {
         path = home;
     } else {
+#ifdef TT_METAL_HOME_DEFAULT
+        path = TT_METAL_HOME_DEFAULT;
+#else
         path = "./";
+#endif
     }
     if (path.back() != '/') {
         path.push_back('/');
