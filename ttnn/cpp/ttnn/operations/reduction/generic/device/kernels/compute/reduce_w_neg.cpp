@@ -22,7 +22,6 @@
 #include "debug/dprint.h"
 
 namespace NAMESPACE {
-
 void MAIN {
     uint32_t Ht = get_compile_time_arg_val(0);
     uint32_t Wt = get_compile_time_arg_val(1);
@@ -42,58 +41,61 @@ void MAIN {
     cb_wait_front(cb_scaler, 1);  // scaler tile from the reader
     for (uint32_t nc = 0; nc < NC; nc++) {
         constexpr int onetile = 1;
-        int reduce_dst_idx = 0;
+        int dst_idx = 0;
         for (uint32_t ht = 0; ht < Ht; ++ht) {
             // tiles are expected to be coming in in NCHW order (W-contiguous)
             // reducing in W means out[h][0] = sum(w=0..W-1, in[h][w])
             // in this case we just sequentially add to accumulator all the W-tiles in a row
             for (uint32_t wt = 0; wt < Wt; ++wt) {
-                tile_regs_acquire();
-                tile_regs_wait();
                 cb_wait_front(cb_input, onetile);
+                tile_regs_acquire();
                 copy_tile_init(cb_input);
-                copy_tile(cb_input, 0, 0);
+                copy_tile(cb_input, 0, dst_idx);
                 negative_tile_init();
-                negative_tile(reduce_dst_idx);
+                negative_tile(dst_idx);
+                tile_regs_wait();
                 cb_pop_front(cb_input, onetile);
                 cb_reserve_back(cb_ineg, onetile);
-                pack_tile(reduce_dst_idx, cb_ineg);
+                tile_regs_commit();
+                pack_tile(dst_idx, cb_ineg);
+                tile_regs_release();
                 cb_push_back(cb_ineg, onetile);
 
+                tile_regs_acquire();
                 if (wt > 0) {
                     cb_wait_front(cb_acc, onetile);
                     copy_tile_init(cb_acc);
-                    copy_tile(cb_acc, 0, 0);
+                    copy_tile(cb_acc, 0, dst_idx);
                 }
 
-                // REDUCE_OP is expected to come from add_define EltwiseBinaryReuseDestType
-                // cb_wait_front(cb_ineg, onetile);   // uncommenting this will hang compute kernel
+                cb_wait_front(cb_ineg, onetile);
                 reduce_init(cb_ineg, cb_scaler, cb_acc);
-                reduce_tile(cb_ineg, cb_scaler, 0, 0, reduce_dst_idx);
+                reduce_tile(cb_ineg, cb_scaler, 0, 0, dst_idx);
+                tile_regs_wait();
                 cb_pop_front(cb_ineg, onetile);
                 if (wt > 0) {
                     cb_pop_front(cb_acc, onetile);
                 }
                 cb_reserve_back(cb_acc, onetile);
-                pack_tile(reduce_dst_idx, cb_acc);
-                cb_push_back(cb_acc, onetile);
                 tile_regs_commit();
+                pack_tile(dst_idx, cb_acc);
                 tile_regs_release();
+                cb_push_back(cb_acc, onetile);
             }  // wt
 
-            tile_regs_acquire();
-            tile_regs_wait();
             cb_wait_front(cb_acc, onetile);
+            tile_regs_acquire();
             copy_tile_init(cb_acc);
-            copy_tile(cb_acc, 0, 0);
+            copy_tile(cb_acc, 0, dst_idx);
             negative_tile_init();
-            negative_tile(reduce_dst_idx);
+            negative_tile(dst_idx);
+            tile_regs_wait();
             cb_pop_front(cb_acc, onetile);
             cb_reserve_back(cb_output, onetile);
-            pack_tile(reduce_dst_idx, cb_output);
-            cb_push_back(cb_output, onetile);
             tile_regs_commit();
+            pack_tile(dst_idx, cb_output);
             tile_regs_release();
+            cb_push_back(cb_output, onetile);
         }  // ht
     }
 }
