@@ -6,14 +6,27 @@ add_library(TTNN::Ops::Eltwise::Complex::Unary ALIAS ttnn_op_eltwise_complex_una
 tt_reuse_precompile_headers(ttnn_op_eltwise_complex_unary TTNN::PCH)
 TT_ENABLE_UNITY_BUILD(ttnn_op_eltwise_complex_unary)
 
-target_sources(ttnn_op_eltwise_complex_unary PRIVATE ${TTNN_OP_ELTWISE_COMPLEX_UNARY_SRCS})
-
-target_include_directories(ttnn_op_eltwise_complex_unary PRIVATE ${FixmeOpIncDirs})
-target_link_libraries(
+set_target_properties(
     ttnn_op_eltwise_complex_unary
-    PRIVATE
-        TT::Metalium
-        TTNN::Core
+    PROPERTIES
+        INTERFACE_HEADER_SETS_TO_VERIFY
+            api
 )
 
+target_sources(
+    ttnn_op_eltwise_complex_unary
+    PUBLIC
+        FILE_SET api
+        TYPE HEADERS
+        BASE_DIRS ${FixmeOpAPIDir}
+        FILES
+            complex_unary.hpp
+    PRIVATE
+        ${TTNN_OP_ELTWISE_COMPLEX_UNARY_SRCS}
+)
+
+target_include_directories(ttnn_op_eltwise_complex_unary PRIVATE ${FixmeOpIncDirs})
+target_link_libraries(ttnn_op_eltwise_complex_unary PRIVATE TT::Metalium PUBLIC TTNN::Core)
+
 install(TARGETS ttnn_op_eltwise_complex_unary LIBRARY COMPONENT tar)
+install(TARGETS ttnn_op_eltwise_complex_unary FILE_SET api COMPONENT ttnn-dev LIBRARY COMPONENT tar)

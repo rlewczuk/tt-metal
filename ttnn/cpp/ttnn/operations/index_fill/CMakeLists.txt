@@ -23,6 +23,7 @@ target_sources(
         TYPE HEADERS
         BASE_DIRS ${FixmeOpAPIDir}
         FILES
+            index_fill.hpp
         FILE_SET kernels
         TYPE HEADERS
         BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
@@ -32,12 +33,7 @@ target_sources(
 )
 
 target_include_directories(ttnn_op_index_fill PRIVATE ${FixmeOpIncDirs})
-target_link_libraries(
-    ttnn_op_index_fill
-    PRIVATE
-        TT::Metalium
-        TTNN::Core
-)
+target_link_libraries(ttnn_op_index_fill PRIVATE TT::Metalium PUBLIC TTNN::Core)
 
 install(
     TARGETS
@@ -49,3 +45,4 @@ install(
 )
 
 install(TARGETS ttnn_op_index_fill LIBRARY COMPONENT tar)
+install(TARGETS ttnn_op_index_fill FILE_SET api COMPONENT ttnn-dev LIBRARY COMPONENT tar)

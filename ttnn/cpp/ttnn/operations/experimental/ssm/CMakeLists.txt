@@ -27,6 +27,9 @@ target_sources(
         TYPE HEADERS
         BASE_DIRS ${FixmeOpAPIDir}
         FILES
+            hc_sum_reduce/hc_sum_reduce.hpp
+            prefix_scan/prefix_scan.hpp
+            repeat_and_interleave_eltwise_mul/repeat_and_interleave_eltwise_mul.hpp
         FILE_SET kernels
         TYPE HEADERS
         BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
@@ -36,12 +39,7 @@ target_sources(
 )
 
 target_include_directories(ttnn_op_experimental_ssm PRIVATE ${FixmeOpIncDirs})
-target_link_libraries(
-    ttnn_op_experimental_ssm
-    PRIVATE
-        TT::Metalium
-        TTNN::Core
-)
+target_link_libraries(ttnn_op_experimental_ssm PRIVATE TT::Metalium PUBLIC TTNN::Core)
 
 install(
     TARGETS
@@ -53,3 +51,4 @@ install(
 )
 
 install(TARGETS ttnn_op_experimental_ssm LIBRARY COMPONENT tar)
+install(TARGETS ttnn_op_experimental_ssm FILE_SET api COMPONENT ttnn-dev LIBRARY COMPONENT tar)

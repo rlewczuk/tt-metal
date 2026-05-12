@@ -22,6 +22,7 @@ target_sources(
         TYPE HEADERS
         BASE_DIRS ${FixmeOpAPIDir}
         FILES
+            point_to_point.hpp
         FILE_SET kernels
         TYPE HEADERS
         BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
@@ -31,12 +32,7 @@ target_sources(
 )
 
 target_include_directories(ttnn_op_point_to_point PRIVATE ${FixmeOpIncDirs})
-target_link_libraries(
-    ttnn_op_point_to_point
-    PRIVATE
-        TT::Metalium
-        TTNN::Core
-)
+target_link_libraries(ttnn_op_point_to_point PRIVATE TT::Metalium PUBLIC TTNN::Core)
 
 install(
     TARGETS
@@ -47,3 +43,4 @@ install(
         COMPONENT ttnn-runtime
 )
 install(TARGETS ttnn_op_point_to_point LIBRARY COMPONENT tar)
+install(TARGETS ttnn_op_point_to_point FILE_SET api COMPONENT ttnn-dev LIBRARY COMPONENT tar)

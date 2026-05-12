@@ -30,6 +30,12 @@ target_sources(
         TYPE HEADERS
         BASE_DIRS ${FixmeOpAPIDir}
         FILES
+            generic/generic_pools.hpp
+            global_avg_pool/global_avg_pool.hpp
+            grid_sample/grid_sample.hpp
+            grid_sample/grid_sample_prepare_grid.hpp
+            rotate/rotate.hpp
+            upsample/upsample.hpp
         FILE_SET kernels
         TYPE HEADERS
         BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
@@ -39,12 +45,7 @@ target_sources(
 )
 
 target_include_directories(ttnn_op_pool PRIVATE ${FixmeOpIncDirs})
-target_link_libraries(
-    ttnn_op_pool
-    PRIVATE
-        TT::Metalium
-        TTNN::Core
-)
+target_link_libraries(ttnn_op_pool PRIVATE TT::Metalium PUBLIC TTNN::Core)
 
 install(
     TARGETS
@@ -56,3 +57,4 @@ install(
 )
 
 install(TARGETS ttnn_op_pool LIBRARY COMPONENT tar)
+install(TARGETS ttnn_op_pool FILE_SET api COMPONENT ttnn-dev LIBRARY COMPONENT tar)

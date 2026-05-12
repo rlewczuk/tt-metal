@@ -26,6 +26,8 @@ target_sources(
         TYPE HEADERS
         BASE_DIRS ${FixmeOpAPIDir}
         FILES
+            attn_matmul/attn_matmul.hpp
+            group_attn_matmul/group_attn_matmul.hpp
         FILE_SET kernels
         TYPE HEADERS
         BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
@@ -35,12 +37,7 @@ target_sources(
 )
 
 target_include_directories(ttnn_op_experimental_matmul PRIVATE ${FixmeOpIncDirs})
-target_link_libraries(
-    ttnn_op_experimental_matmul
-    PRIVATE
-        TT::Metalium
-        TTNN::Core
-)
+target_link_libraries(ttnn_op_experimental_matmul PRIVATE TT::Metalium PUBLIC TTNN::Core)
 
 install(
     TARGETS
@@ -52,3 +49,4 @@ install(
 )
 
 install(TARGETS ttnn_op_experimental_matmul LIBRARY COMPONENT tar)
+install(TARGETS ttnn_op_experimental_matmul FILE_SET api COMPONENT ttnn-dev LIBRARY COMPONENT tar)

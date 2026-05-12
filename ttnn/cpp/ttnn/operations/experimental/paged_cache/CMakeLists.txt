@@ -22,6 +22,7 @@ target_sources(
         TYPE HEADERS
         BASE_DIRS ${FixmeOpAPIDir}
         FILES
+            paged_cache.hpp
         FILE_SET kernels
         TYPE HEADERS
         BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
@@ -31,12 +32,7 @@ target_sources(
 )
 
 target_include_directories(ttnn_op_experimental_paged_cache PRIVATE ${FixmeOpIncDirs})
-target_link_libraries(
-    ttnn_op_experimental_paged_cache
-    PRIVATE
-        TT::Metalium
-        TTNN::Core
-)
+target_link_libraries(ttnn_op_experimental_paged_cache PRIVATE TT::Metalium PUBLIC TTNN::Core)
 
 install(
     TARGETS
@@ -48,3 +44,4 @@ install(
 )
 
 install(TARGETS ttnn_op_experimental_paged_cache LIBRARY COMPONENT tar)
+install(TARGETS ttnn_op_experimental_paged_cache FILE_SET api COMPONENT ttnn-dev LIBRARY COMPONENT tar)

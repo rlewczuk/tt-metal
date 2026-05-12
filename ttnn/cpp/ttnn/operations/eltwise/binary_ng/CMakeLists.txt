@@ -50,3 +50,4 @@ install(
         COMPONENT ttnn-runtime
 )
 install(TARGETS ttnn_op_eltwise_binary_ng LIBRARY COMPONENT tar)
+install(TARGETS ttnn_op_eltwise_binary_ng FILE_SET api COMPONENT ttnn-dev LIBRARY COMPONENT tar)

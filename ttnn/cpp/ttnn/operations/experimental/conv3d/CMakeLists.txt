@@ -22,6 +22,11 @@ target_sources(
         TYPE HEADERS
         BASE_DIRS ${FixmeOpAPIDir}
         FILES
+            conv3d.hpp
+            prepare_conv3d_weights.hpp
+            device/conv3d_device_operation.hpp
+            device/conv3d_device_operation_types.hpp
+            device/conv3d_program_factory.hpp
         FILE_SET kernels
         TYPE HEADERS
         BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
@@ -31,12 +36,7 @@ target_sources(
 )
 
 target_include_directories(ttnn_op_experimental_conv3d PRIVATE ${FixmeOpIncDirs})
-target_link_libraries(
-    ttnn_op_experimental_conv3d
-    PRIVATE
-        TT::Metalium
-        TTNN::Core
-)
+target_link_libraries(ttnn_op_experimental_conv3d PRIVATE TT::Metalium PUBLIC TTNN::Core)
 
 install(
     TARGETS
@@ -48,3 +48,4 @@ install(
 )
 
 install(TARGETS ttnn_op_experimental_conv3d LIBRARY COMPONENT tar)
+install(TARGETS ttnn_op_experimental_conv3d FILE_SET api COMPONENT ttnn-dev LIBRARY COMPONENT tar)

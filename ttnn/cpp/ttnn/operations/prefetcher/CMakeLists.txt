@@ -22,6 +22,7 @@ target_sources(
         TYPE HEADERS
         BASE_DIRS ${FixmeOpAPIDir}
         FILES
+            prefetcher/dram_prefetcher.hpp
         FILE_SET kernels
         TYPE HEADERS
         BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
@@ -31,12 +32,7 @@ target_sources(
 )
 
 target_include_directories(ttnn_op_prefetcher PRIVATE ${FixmeOpIncDirs})
-target_link_libraries(
-    ttnn_op_prefetcher
-    PRIVATE
-        TT::Metalium
-        TTNN::Core
-)
+target_link_libraries(ttnn_op_prefetcher PUBLIC TTNN::Core PRIVATE TT::Metalium)
 
 install(
     TARGETS
@@ -48,3 +44,4 @@ install(
 )
 
 install(TARGETS ttnn_op_prefetcher LIBRARY COMPONENT tar)
+install(TARGETS ttnn_op_prefetcher FILE_SET api COMPONENT ttnn-dev LIBRARY COMPONENT tar)

@@ -25,6 +25,7 @@ target_sources(
         TYPE HEADERS
         BASE_DIRS ${FixmeOpAPIDir}
         FILES
+            moe_grouped_topk.hpp
         FILE_SET kernels
         TYPE HEADERS
         BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
@@ -38,6 +39,7 @@ target_link_libraries(
     ttnn_op_experimental_deepseek_prefill_moe_grouped_topk
     PRIVATE
         TT::Metalium
+    PUBLIC
         TTNN::Core
 )
 
@@ -52,3 +54,4 @@ install(
 )
 
 install(TARGETS ttnn_op_experimental_deepseek_prefill_moe_grouped_topk LIBRARY COMPONENT tar)
+install(TARGETS ttnn_op_experimental_deepseek_prefill_moe_grouped_topk FILE_SET api COMPONENT ttnn-dev LIBRARY COMPONENT tar)

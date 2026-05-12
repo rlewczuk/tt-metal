@@ -22,6 +22,9 @@ target_sources(
         TYPE HEADERS
         BASE_DIRS ${FixmeOpAPIDir}
         FILES
+            minimal_matmul.hpp
+            minimal_matmul_split.hpp
+            device/minimal_matmul_device_operation_types.hpp
         FILE_SET kernels
         TYPE HEADERS
         BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
@@ -39,12 +42,7 @@ set_source_files_properties(
 )
 
 target_include_directories(ttnn_op_experimental_minimal_matmul PRIVATE ${FixmeOpIncDirs})
-target_link_libraries(
-    ttnn_op_experimental_minimal_matmul
-    PRIVATE
-        TT::Metalium
-        TTNN::Core
-)
+target_link_libraries(ttnn_op_experimental_minimal_matmul PRIVATE TT::Metalium PUBLIC TTNN::Core)
 
 install(
     TARGETS
@@ -56,3 +54,4 @@ install(
 )
 
 install(TARGETS ttnn_op_experimental_minimal_matmul LIBRARY COMPONENT tar)
+install(TARGETS ttnn_op_experimental_minimal_matmul FILE_SET api COMPONENT ttnn-dev LIBRARY COMPONENT tar)
